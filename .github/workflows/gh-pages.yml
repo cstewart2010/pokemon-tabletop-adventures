@@ -103,6 +103,19 @@ jobs:
         $x = Get-Content ./allure-report/summary.json | ConvertFrom-Json
         $x | Add-Member -Name "remoteHref" -Value "https://cstewart2010.github.io/pokemon-tabletop-adventures/allure-report" -MemberType NoteProperty
         ConvertTo-Json $x > ./allure-report/summary.json
+
+    - name: Add Allure Report to gh-pages
+      run: |
+        mkdir gh-pages-2
+        cd gh-pages-2
+        git clone $GITHUB_REPOSITORY
+        cd pokemon-tabletop-adventures
+        git checkout gh-pages
+        cd ../..
+        cp -r ./allure-report ./gh-pages-2/pokemon-tabletop-adventures
+        cd gh-pages-2/pokemon-tabletop-adventures
+        git commit -a -m "Added allure-report"
+        git push
       
     - name: Add Integration Test Report PR Comment
       if: always()
