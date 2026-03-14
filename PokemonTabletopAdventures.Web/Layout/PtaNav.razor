@@ -1,0 +1,22 @@
+@using PokemonTabletopAdventures.Web.Constants
+<div class="top-row ps-3 navbar navbar-dark">
+    <a class="navbar-brand" href="@Routes.PtaRoot">Pokemon Tabletop Adventures</a>
+</div>
+
+<nav class="flex-column">
+    <div class="nav-item px-3">
+        <NavLink class="nav-link" href="about">
+            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> About
+        </NavLink>
+    </div>
+    <div class="nav-item px-3">
+        <NavLink class="nav-link" href="document">
+            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Documentation
+        </NavLink>
+    </div>
+    <div class="nav-item px-3">
+        <NavLink class="nav-link" href="test">
+            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Test
+        </NavLink>
+    </div>
+</nav>
