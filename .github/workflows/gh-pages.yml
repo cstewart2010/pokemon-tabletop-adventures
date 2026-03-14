@@ -116,7 +116,8 @@ jobs:
         cd gh-pages-2/pokemon-tabletop-adventures
         git config user.name "github-actions[bot]"
         git config user.email {user.id}+{user.login}@users.noreply.github.com
-        git commit -a -m "Added allure-report"
+        git add .
+        git commit -m "Added allure-report"
         git push
       
     - name: Add Integration Test Report PR Comment
