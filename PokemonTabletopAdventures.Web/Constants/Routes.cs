@@ -7,6 +7,6 @@ public static class Routes
     #if DEBUG
     public const string PtaRoot = "/";
     #else
-    public const string PtaRoot = "/pokemon-tabletop-adventures";
+    public const string PtaRoot = "/pokemon-tabletop-adventures/";
     #endif
 }
