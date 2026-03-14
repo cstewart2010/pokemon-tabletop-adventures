@@ -5,7 +5,8 @@ namespace PokemonTabletopAdventures.Web.Services
 {
     public interface IIndexService
     {
-        public Task<Response<IndexCollectionResponse>> GetPokemonFormsAsync(int offset, int limit);
+        public Task<Response<IndexCollectionResponse>> GetPokedexAsync();
+        public Task<Response<PokemonAndForms>> GetPokemonAndFormsAsync(string pokemon);
         public Task<Response<IndexCollectionResponse>> GetBerriesAsync();
         public Task<Response<IndexCollectionResponse>> GetFeaturesAsync();
         public Task<Response<IndexCollectionResponse>> GetKeyItemsAsync();
