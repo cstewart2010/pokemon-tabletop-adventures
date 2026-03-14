@@ -101,7 +101,7 @@ jobs:
       shell: pwsh
       run: |
         $x = Get-Content ./allure-report/summary.json | ConvertFrom-Json
-        $x | Add-Member -Name "remoteHref" -Value "https://cstewart2010.github.io/pta-backend/allure-report" -MemberType NoteProperty
+        $x | Add-Member -Name "remoteHref" -Value "https://cstewart2010.github.io/pokemon-tabletop-adventures/allure-report" -MemberType NoteProperty
         ConvertTo-Json $x > ./allure-report/summary.json
       
     - name: Add Integration Test Report PR Comment
