@@ -114,6 +114,8 @@ jobs:
         cd ../..
         cp -r ./allure-report ./gh-pages-2/pokemon-tabletop-adventures
         cd gh-pages-2/pokemon-tabletop-adventures
+        git config user.name "github-actions[bot]"
+        git config user.email {user.id}+{user.login}@users.noreply.github.com
         git commit -a -m "Added allure-report"
         git push
       
