@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36202.13 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonTabletopAdventures.Web", "PokemonTabletopAdventures.Web\PokemonTabletopAdventures.Web.csproj", "{3A5357B4-1512-4676-9274-88205991D8D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonTabletopAdventures.Web", "src\PokemonTabletopAdventures.Web\PokemonTabletopAdventures.Web.csproj", "{3A5357B4-1512-4676-9274-88205991D8D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonTabletopAdventures.Web.UnitTests", "test\PokemonTabletopAdventures.Web.UnitTests\PokemonTabletopAdventures.Web.UnitTests.csproj", "{A390047B-3EF4-4406-956D-5EF10A4A6D4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonTabletopAdventures.Web.IntegrationTests", "test\PokemonTabletopAdventures.Web.IntegrationTests\PokemonTabletopAdventures.Web.IntegrationTests.csproj", "{5F319F28-6063-48B6-BD73-B2B04E830837}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{3A5357B4-1512-4676-9274-88205991D8D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A5357B4-1512-4676-9274-88205991D8D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A5357B4-1512-4676-9274-88205991D8D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A390047B-3EF4-4406-956D-5EF10A4A6D4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A390047B-3EF4-4406-956D-5EF10A4A6D4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A390047B-3EF4-4406-956D-5EF10A4A6D4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A390047B-3EF4-4406-956D-5EF10A4A6D4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F319F28-6063-48B6-BD73-B2B04E830837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F319F28-6063-48B6-BD73-B2B04E830837}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F319F28-6063-48B6-BD73-B2B04E830837}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F319F28-6063-48B6-BD73-B2B04E830837}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

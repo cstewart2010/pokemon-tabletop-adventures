@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc;
 using PokemonTabletopAdventures.Web.Constants;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace PokemonTabletopAdventures.Web.Domain;
 
+[ExcludeFromCodeCoverage]
 public abstract class BaseResponse
 {
     protected static readonly StringEnumConverter Options = new StringEnumConverter();

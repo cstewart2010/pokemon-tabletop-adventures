@@ -1,14 +1,16 @@
-﻿using PokemonTabletopAdventures.Web.Constants;
+﻿using System.Diagnostics.CodeAnalysis;
+using PokemonTabletopAdventures.Web.Constants;
 
 namespace PokemonTabletopAdventures.Web.Domain;
 
-public abstract class AbstractService
+[ExcludeFromCodeCoverage]
+internal abstract class AbstractService
 {
     private readonly HttpClient? _httpClient;
 
     internal bool IsReadyInternal { get; }
 
-    public AbstractService(IConfiguration configuration, string route)
+    protected AbstractService(IConfiguration configuration, string route)
     {
         var rootUrl = configuration.GetValue<string>(Routes.ApiRootUrl);
         if (rootUrl != null)
@@ -24,7 +26,7 @@ public abstract class AbstractService
         }
     }
 
-    public async Task<Response> SendAsync(
+    protected async Task<Response> SendAsync(
         string endpoint,
         HttpMethod method,
         string? accessToken = null,
@@ -42,7 +44,7 @@ public abstract class AbstractService
         return await Send(builder);
     }
 
-    public async Task<Response> SendAsync<TRequest>(
+    protected async Task<Response> SendAsync<TRequest>(
         string endpoint, HttpMethod method,
         TRequest payload,
         string contentType,
@@ -62,7 +64,7 @@ public abstract class AbstractService
         return await Send(builder);
     }
 
-    public async Task<Response<TResponse>> SendAsync<TResponse>(
+    protected async Task<Response<TResponse>> SendAsync<TResponse>(
         string endpoint,
         HttpMethod method,
         string? accessToken = null,
@@ -77,11 +79,10 @@ public abstract class AbstractService
         {
             builder.WithHeader(PtaHeaderNames.SessionAuth, sessionAuth);
         }
-        var message = builder.Build();
         return await Send<TResponse>(builder);
     }
 
-    public async Task<Response<TResponse>> SendAsync<TRequest, TResponse>(
+    protected async Task<Response<TResponse>> SendAsync<TRequest, TResponse>(
         string endpoint,
         HttpMethod method,
         TRequest payload,
@@ -99,8 +100,6 @@ public abstract class AbstractService
         {
             builder.WithHeader(PtaHeaderNames.SessionAuth, sessionAuth);
         }
-        var message = builder.Build();
-        var response = await _httpClient.SendAsync(message);
         return await Send<TResponse>(builder);
     }
 

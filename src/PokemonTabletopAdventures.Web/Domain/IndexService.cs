@@ -1,8 +1,10 @@
-﻿using PokemonTabletopAdventures.Models.Indicies;
+﻿using System.Diagnostics.CodeAnalysis;
+using PokemonTabletopAdventures.Models.Indicies;
 using PokemonTabletopAdventures.Web.Constants;
 
 namespace PokemonTabletopAdventures.Web.Domain;
 
+[ExcludeFromCodeCoverage]
 internal class IndexService(IConfiguration configuration) : AbstractService(configuration, string.Empty), IIndexService
 {
     public Task<Response<IndexCollectionResponse>> GetBerriesAsync()

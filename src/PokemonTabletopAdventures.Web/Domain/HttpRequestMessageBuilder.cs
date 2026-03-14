@@ -1,20 +1,17 @@
-﻿using System.Text;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using System.Text.Json;
 
 namespace PokemonTabletopAdventures.Web.Domain;
 
-public class HttpRequestMessageBuilder
+[ExcludeFromCodeCoverage]
+internal class HttpRequestMessageBuilder(HttpMethod httpMethod, Uri baseAddress, string endpoint)
 {
-    private readonly HttpRequestMessage _httpRequestMessage;
-
-    public HttpRequestMessageBuilder(HttpMethod httpMethod, Uri baseAddress, string endpoint)
+    private readonly HttpRequestMessage _httpRequestMessage = new()
     {
-        _httpRequestMessage = new HttpRequestMessage
-        {
-            Method = httpMethod,
-            RequestUri = new Uri(baseAddress, endpoint),
-        };
-    }
+        Method = httpMethod,
+        RequestUri = new Uri(baseAddress, endpoint),
+    };
 
     public HttpRequestMessageBuilder WithPayload<T>(string contentType, T payload)
     {
