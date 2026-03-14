@@ -1,0 +1,73 @@
+﻿@page "/test"
+@using PokemonTabletopAdventures.Models.Indicies;
+
+@inject IIndexService Service
+
+<PageTitle>Connection Test Page</PageTitle>
+
+<h1>This is a test</h1>
+
+@if (Service.IsReady)
+{
+    @if (_isRunning)
+    {
+        <div>Magic is happening</div>
+    }
+    else
+    {
+        <div class="input-group">
+            <span class="input-group-text">Get Pokedex</span>
+            <button class="btn btn-primary" @onclick="GetPokedexAsync">Search</button>
+        </div>
+        <div class="input-group">
+            <span class="input-group-text">Get Pokemon</span>
+            <input class="form-control" type="text" @bind-value="_input" />
+            <button class="btn btn-primary" @onclick="GetPokemonAndFormsAsync">Search</button>
+        </div>
+
+        foreach (var result in _pokedex)
+        {
+            <div>@result</div>
+        }
+
+        if (_pokemonAndForms != null)
+        {
+            <div>(@_pokemonAndForms.Pokemon.DexNo) @_pokemonAndForms.Pokemon.Name</div>
+            <div>HP: @_pokemonAndForms.Pokemon.PokemonStats.HP</div>
+            <div>Attack: @_pokemonAndForms.Pokemon.PokemonStats.Attack</div>
+            <div>Defense: @_pokemonAndForms.Pokemon.PokemonStats.Defense</div>
+            <div>Special Attack: @_pokemonAndForms.Pokemon.PokemonStats.SpecialAttack</div>
+            <div>Special Defense: @_pokemonAndForms.Pokemon.PokemonStats.SpecialDefense</div>
+            <div>Speed: @_pokemonAndForms.Pokemon.PokemonStats.Speed</div>
+        }
+    }
+}
+else
+{
+    <div>API has not ben deployed yet</div>
+}
+
+@code{
+    string _input = string.Empty;
+    bool _isRunning;
+    ICollection<string> _pokedex = [];
+    PokemonAndForms? _pokemonAndForms;
+
+    private async Task GetPokedexAsync()
+    {
+        _isRunning = true;
+        var response = await Service.GetPokedexAsync();
+        _pokedex = response.Data?.Results ?? [];
+        _pokemonAndForms = null;
+        _isRunning = false;
+    }
+
+    private async Task GetPokemonAndFormsAsync()
+    {
+        _isRunning = true;
+        var response = await Service.GetPokemonAndFormsAsync(_input);
+        _pokemonAndForms = response.Data;
+        _pokedex = [];
+        _isRunning = false;
+    }
+}
