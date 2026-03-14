@@ -40,9 +40,14 @@ internal class IndexService(IConfiguration configuration) : AbstractService(conf
         throw new NotImplementedException();
     }
 
-    public async Task<Response<IndexCollectionResponse>> GetPokemonFormsAsync(int offset, int limit)
+    public async Task<Response<IndexCollectionResponse>> GetPokedexAsync()
     {
-        return await SendAsync<IndexCollectionResponse>($"{Routes.PokemonForms}?offset={offset}&limit={limit}", HttpMethod.Get);
+        return await SendAsync<IndexCollectionResponse>(Routes.PokemonForms, HttpMethod.Get);
+    }
+
+    public async Task<Response<PokemonAndForms>> GetPokemonAndFormsAsync(string pokemon)
+    {
+        return await SendAsync<PokemonAndForms>($"{Routes.PokemonForms}/{pokemon}", HttpMethod.Get);
     }
 
     public Task<Response<IndexCollectionResponse>> GetPokemonItemsAsync()

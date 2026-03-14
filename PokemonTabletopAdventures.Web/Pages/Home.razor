@@ -1,42 +1,47 @@
 ﻿@page "/"
 @using PokemonTabletopAdventures.Web.Domain;
 @using PokemonTabletopAdventures.Models.Indicies;
+@using System.Collections.Generic;
 
-@inject IIndexService service
+@inject IIndexService Service
 
 <PageTitle>Home</PageTitle>
 
 <h1>This is a test</h1>
 
-<div class="input-group">
-    <span class="input-group-text">Offset</span>
-    <input class="form-control" type="number" @bind-value="offset" />
-</div>
-
-<div class="input-group">
-    <span class="input-group-text">Limit</span>
-    <input class="form-control" type="number" @bind-value="limit" />
-</div>
-
-@if (service.IsReady)
+@if (Service.IsReady)
 {
-    <button class="btn btn-primary" @onclick="SendAsync">Search</button>
-
-    @if (_isRunnnig)
+    @if (_isRunning)
     {
         <div>Magic is happening</div>
     }
-    else if (_response?.IsSuccessful == true)
+    else
     {
-        <div>@_response.Content</div>
-        foreach (var result in _response.Data!.Results)
+        <div class="input-group">
+            <span class="input-group-text">Get Pokedex</span>
+            <button class="btn btn-primary" @onclick="GetPokedexAsync">Search</button>
+        </div>
+        <div class="input-group">
+            <span class="input-group-text">Get Pokemon</span>
+            <input class="form-control" type="text" @bind-value="_input" />
+            <button class="btn btn-primary" @onclick="GetPokemonAndFormsAsync">Search</button>
+        </div>
+
+        foreach (var result in _pokedex)
         {
             <div>@result</div>
         }
-    }
-    else if (_response?.IsSuccessful == false)
-    {
-        <div>@_response.Content</div>
+
+        if (_pokemonAndForms != null)
+        {
+            <div>(@_pokemonAndForms.Pokemon.DexNo) @_pokemonAndForms.Pokemon.Name</div>
+            <div>HP: @_pokemonAndForms.Pokemon.PokemonStats.HP</div>
+            <div>Attack: @_pokemonAndForms.Pokemon.PokemonStats.Attack</div>
+            <div>Defense: @_pokemonAndForms.Pokemon.PokemonStats.Defense</div>
+            <div>Special Attack: @_pokemonAndForms.Pokemon.PokemonStats.SpecialAttack</div>
+            <div>Special Defense: @_pokemonAndForms.Pokemon.PokemonStats.SpecialDefense</div>
+            <div>Speed: @_pokemonAndForms.Pokemon.PokemonStats.Speed</div>
+        }
     }
 }
 else
@@ -45,15 +50,26 @@ else
 }
 
 @code{
-    int offset, limit;
     string _input = string.Empty;
-    bool _isRunnnig = false;
-    Response<IndexCollectionResponse>? _response;
+    bool _isRunning;
+    ICollection<string> _pokedex = [];
+    PokemonAndForms? _pokemonAndForms;
 
-    private async Task SendAsync()
+    private async Task GetPokedexAsync()
     {
-        _isRunnnig = true;
-        _response = await service.GetPokemonFormsAsync(offset, limit);
-        _isRunnnig = false;
+        _isRunning = true;
+        var response = await Service.GetPokedexAsync();
+        _pokedex = response.Data?.Results ?? [];
+        _pokemonAndForms = null;
+        _isRunning = false;
+    }
+
+    private async Task GetPokemonAndFormsAsync()
+    {
+        _isRunning = true;
+        var response = await Service.GetPokemonAndFormsAsync(_input);
+        _pokemonAndForms = response.Data;
+        _pokedex = [];
+        _isRunning = false;
     }
 }
