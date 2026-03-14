@@ -30,7 +30,7 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Add Source
-        run: dotnet nuget add source --username cstewart2010 --password ${{ secrets.DEPLOY_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/cstewart2010/index.json"
+        run: dotnet nuget add source --username cstewart2010 --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/cstewart2010/index.json"
 
       # Publish the site
       - name: Publish
@@ -40,6 +40,6 @@ jobs:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.DEPLOY_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: public/wwwroot
           force_orphan: true
