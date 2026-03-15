@@ -1,6 +1,9 @@
 name: Deploy static content to Pages
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
@@ -12,6 +15,7 @@ permissions:
   pages: write
   id-token: write
   packages: read
+  pull-requests: write
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
@@ -19,29 +23,112 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+env:
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 8.0.x
+  APP_WORKING_DIRECTORY: src/PokemonTabletopAdventures.Web
+  UNIT_TEST_WORKING_DIRECTORY: test/PokemonTabletopAdventures.Web.UnitTests
+  INT_TEST_WORKING_DIRECTORY: test/PokemonTabletopAdventures.Web.IntegrationTests
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the code
-      - uses: actions/checkout@v4
+    # Checkout the code
+    - uses: actions/checkout@v4
 
-      # Install .NET SDK
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-      - name: Add Source
-        run: dotnet nuget add source --username cstewart2010 --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/cstewart2010/index.json"
+    # Install .NET SDK
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
 
-      # Publish the site
-      - name: Publish
-        run: dotnet publish PokemonTabletopAdventures.Web/PokemonTabletopAdventures.Web.csproj -c:Release -o:public -p:GHPages=true
+    - name: Add Source
+      run: dotnet nuget add source --username cstewart2010 --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/cstewart2010/index.json"
 
-      # Deploy the site
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: public/wwwroot
-          force_orphan: true
+    - name: Restore
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
+
+    - name: Run Unit Tests
+      run: dotnet test "${{ env.UNIT_TEST_WORKING_DIRECTORY }}" --no-build --collect:"Xplat Code Coverage"
+
+    - name: Code Coverage Summary Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: '${{ env.UNIT_TEST_WORKING_DIRECTORY }}/TestResults/*/coverage.cobertura.xml'
+        badge: true
+        format: 'markdown'
+        output: 'both'
+
+    - name: Add Unit Test Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        path: code-coverage-results.md
+
+    - name: Write to Job Summary
+      run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
+    # Publish the site
+    - name: Publish
+      run: dotnet publish "${{ env.APP_WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output public -p:GHPages=true
+
+    # Deploy the site
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: public/wwwroot
+        force_orphan: true
+
+    - name: Sleep for 20 seconds before running integration tests
+      shell: pwsh
+      run: Start-Sleep -s 20
+
+    - name: Run Integration Tests
+      run: dotnet test "${{ env.INT_TEST_WORKING_DIRECTORY }}" --no-build
+      continue-on-error: true
+
+    - name: Generate Allure Report
+      run: |
+        npm install -g allure
+        allure generate --name "Pokemon Tabletop Adventures Web Integration Tests"
+        cp -r ./allure-report ./public
+
+    - name: Add remoteHref to Summary Json
+      shell: pwsh
+      run: |
+        $x = Get-Content ./allure-report/summary.json | ConvertFrom-Json
+        $x | Add-Member -Name "remoteHref" -Value "https://cstewart2010.github.io/pokemon-tabletop-adventures/allure-report" -MemberType NoteProperty
+        ConvertTo-Json $x > ./allure-report/summary.json
+
+    - name: Add Allure Report to gh-pages
+      run: |
+        cp -r ./allure-report ./public/wwwroot
+
+    # Deploy the site
+    - name: Deploy with report
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: public/wwwroot
+        force_orphan: true
+      
+    - name: Add Integration Test Report PR Comment
+      if: always()
+      uses: allure-framework/allure-action@v0
+      with:
+        report-directory: ./allure-report
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Fail Pipeline if integration tests failed
+      shell: pwsh
+      run: |
+        $x = Get-Content ./allure-report/summary.json | ConvertFrom-Json
+        if ($x.status -ne "passed") {
+          Write-Host Integration Test Status: $x.status
+          exit 1
+        }

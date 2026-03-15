@@ -1,5 +1,13 @@
-﻿namespace PokemonTabletopAdventures.Web.IntegrationTests;
+﻿using Allure.NUnit;
+using Allure.NUnit.Attributes;
 
+namespace PokemonTabletopAdventures.Web.IntegrationTests;
+
+[AllureNUnit]
+[AllureEpic("Pokemon Tabletop Adventures Web")]
+[AllureParentSuite("Pokemon Tabletop Adventures Web")]
+[AllureFeature("Sample")]
+[AllureSuite("Sample")]
 public class Tests
 {
     [SetUp]
