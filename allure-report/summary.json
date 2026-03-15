@@ -1,0 +1,29 @@
+{
+  "stats": {
+    "total": 1,
+    "passed": 1
+  },
+  "status": "passed",
+  "newTests": [
+    {
+      "id": "00746ed5cf3306b4a24e8503ff9548e9",
+      "name": "Test1",
+      "status": "passed",
+      "duration": 19
+    }
+  ],
+  "flakyTests": [],
+  "retryTests": [],
+  "name": "Pokemon Tabletop Adventures Web Integration Tests",
+  "duration": 19,
+  "createdAt": 1773547884315,
+  "plugin": "Awesome",
+  "meta": {
+    "reportId": "b242f2fb-e6d4-4714-8f53-775ed050f2c6",
+    "singleFile": false,
+    "withTestResultsLinks": true
+  },
+  "pullRequestHref": "",
+  "jobHref": "https://github.com/cstewart2010/pokemon-tabletop-adventures/actions/runs/23103071293",
+  "remoteHref": "https://cstewart2010.github.io/pokemon-tabletop-adventures/allure-report"
+}
